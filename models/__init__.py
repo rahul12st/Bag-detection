@@ -1,3 +1,4 @@
+import tempfile
 from ultralytics import YOLO, solutions
 import cv2
 from supervision.utils.video import VideoInfo, VideoSink, get_video_frames_generator
@@ -5,7 +6,6 @@ from supervision.detection.core import Detections
 from utils import create_colorpalette, hex_to_rgb
 import streamlit as st
 import numpy as np
-import tempfile
 import base64
 import os
 
