@@ -15,13 +15,16 @@ class Model:
         self.CLASS_NAMES_DICT = self.model.model.names
 
     def predict_video_from_bytes(self, video_bytes: bytes, confidence_threshold: float = 0.9):
-        video_frames = VideoInfo.from_video_bytes(video_bytes)
-        total_frames = len(video_frames)
+        # Convert video bytes to OpenCV-compatible format
+        nparr = np.frombuffer(video_bytes, np.uint8)
+        frame_array = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+
+        total_frames = frame_array.shape[0]
         current_frame = 0
         progress_bar = st.progress(0)
 
-        line_y = int(video_frames[0].height * LINE_POSITION)
-        line_points = [(0, line_y), (video_frames[0].width, line_y)]
+        line_y = int(frame_array[0].shape[0] * LINE_POSITION)
+        line_points = [(0, line_y), (frame_array[0].shape[1], line_y)]
         
         counter = solutions.ObjectCounter(
             reg_pts=line_points,  
@@ -32,7 +35,7 @@ class Model:
 
         output_frames = []
 
-        for frame in get_video_frames_generator(video_frames):
+        for frame in frame_array:
             current_frame += 1
             progress_text = f'Frames: {current_frame}/{total_frames}, {round(100*current_frame/total_frames, 1)}% | The video is being processed!'
             progress_bar.progress(current_frame/total_frames, 'Completed!' if current_frame == total_frames else progress_text)
