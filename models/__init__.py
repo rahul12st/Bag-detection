@@ -35,7 +35,7 @@ class Model:
         video_info = VideoInfo.from_video_path(source)
         total, current = video_info.total_frames, 0
         progress_text = f'Frames: {current}/{total}, {round(100*current/total, 1)}% | The video is being processed!'
-        progress_bar = st.progress(current/total)
+        progress_bar = st.progress(current/total,progress_text)
        
         line_y = int(video_info.height * LINE_POSITION)
         line_points = [(0, line_y), (video_info.width, line_y)]
