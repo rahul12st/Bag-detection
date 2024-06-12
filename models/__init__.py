@@ -25,23 +25,19 @@ CLASS_ID_BAG = 0
 LINE_POSITION = 0.85  # Adjust this value as per your requirement
 
 class Model:
-    def __init__(self, variant='best.pt'):  # Default to your custom model
+    def __init__(self, variant='best.pt'):
         self.model = YOLO('models/' + variant)
         self.CLASS_NAMES_DICT = self.model.model.names
 
     def predict_video(self, source: str, confidence_threshold: float = 0.9):
         generator = get_video_frames_generator(source)
-        
         video_info = VideoInfo.from_video_path(source)
         total, current = video_info.total_frames, 0
-        progress_text = f'Frames: {current}/{total}, {round(100*current/total, 1)}% | The video is being processed!'
-        progress_bar = st.progress(current/total, progress_text)
-       
         line_y = int(video_info.height * LINE_POSITION)
         line_points = [(0, line_y), (video_info.width, line_y)]
-        
+
         counter = solutions.ObjectCounter(
-            reg_pts=line_points,  
+            reg_pts=line_points,
             classes_names=self.CLASS_NAMES_DICT,
             draw_tracks=True,
             line_thickness=2,
@@ -49,27 +45,17 @@ class Model:
 
         with tempfile.NamedTemporaryFile(delete=False, suffix='.mp4') as tmpfile:
             video_path = tmpfile.name
-
             with VideoSink(video_path, video_info) as sink:
                 for frame in generator:
-                    progress_text = f'Frames: {current}/{total}, {round(100*current/total, 1)}% | The video is being processed!'
                     current += 1
-                    progress_bar.progress(current/total, 'Completed!' if current == total else progress_text)
+                    progress_text = f'Frames: {current}/{total}, {round(100*current/total, 1)}% | The video is being processed!'
                     tracks = self.model.track(frame, persist=True, show=False)
-                    
                     mask = tracks[0].boxes.conf >= confidence_threshold
                     filtered_tracks = [track[mask] for track in tracks]
-                    # Debug: Print the number of detected objects in each frame
-                    
-                    print(f'Detected objects in frame {current}: {len(tracks[0].boxes)}')
 
                     frame = counter.start_counting(frame, filtered_tracks)
-                    
-                    # Draw the line on the frame
                     cv2.line(frame, line_points[0], line_points[1], (0, 255, 0), 2)
-                    
                     sink.write_frame(frame)
-        
         return video_path
 
 def main():
