@@ -1,8 +1,8 @@
-opencv_python~=4.9.0.80
-opencv_python_headless~=4.8.1.78
-Pillow~=10.3.0
-PyYAML~=6.0.1
-streamlit~=1.3.0
-supervision~=0.17.1
-ultralytics~=8.2.1
+opencv_python
+opencv_python_headless
+Pillow
+PyYAML
+streamlit
+supervision
+ultralytics
 shapely
