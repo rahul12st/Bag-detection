@@ -35,7 +35,6 @@ class Model:
 
     def predict_video(self, source: str, confidence_threshold: float = 0.9, frame_skip: int = 3):
         generator = get_video_frames_generator(source)
-
         video_info = VideoInfo.from_video_path(source)
         total_frames = video_info.total_frames
         
