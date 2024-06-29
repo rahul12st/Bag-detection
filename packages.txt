@@ -1,1 +1,4 @@
-libtk8.6
+
+liblapack-dev
+libblas-dev
+gfortran
