@@ -6,3 +6,4 @@ streamlit
 supervision
 ultralytics
 shapely
+lap
