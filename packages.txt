@@ -1,5 +1,1 @@
-build-essential
-liblapack-dev
-libblas-dev
-gfortran
-python3-dev
+libtk8.6
