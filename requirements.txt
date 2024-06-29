@@ -5,4 +5,4 @@ PyYAML~=6.0.1
 streamlit~=1.26.0
 supervision~=0.17.1
 ultralytics~=8.0.30
-
+shapely
